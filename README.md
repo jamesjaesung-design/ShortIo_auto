@@ -1,145 +1,100 @@
-# Short Auto
+# Short.io 클릭 로그 모니터링 앱
+
+Python + Streamlit 기반 빠른 프로토타입
 
 ## 버전 정보
+- **현재 버전**: v1.2.0
+- **최종 업데이트**: 2026-01-15
 
-- **현재 버전**: v1.1.0
-- **최종 업데이트**: 2026-01-12
+## 빠른 시작
 
-## 프로젝트 소개
-
-Short.io Clickstream 실시간 모니터링 대시보드입니다.
-Next.js (TypeScript) + Vercel 환경에서 실행됩니다.
-
-## 기술 스택
-
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Deployment**: Vercel
-- **Date Library**: dayjs (with UTC & timezone plugins)
-
-## 설치 및 실행
-
-### 1. 패키지 설치
-
+### 1. 의존성 설치
 ```bash
-npm install
+pip install streamlit pandas requests
 ```
 
-필요한 패키지:
-
-- `next`: Next.js 프레임워크
-- `react`, `react-dom`: React 라이브러리
-- `dayjs`: 날짜/시간 처리 라이브러리
-- `typescript`: TypeScript 컴파일러
-
-### 2. 개발 서버 실행
-
+또는 requirements.txt 사용:
 ```bash
-npm run dev
+pip install -r requirements.txt
 ```
 
-개발 서버는 `http://localhost:3000`에서 실행됩니다.
-
-### 3. 프로덕션 빌드
-
+### 2. 앱 실행
 ```bash
-npm run build
-npm start
+streamlit run app.py
 ```
 
-## API 엔드포인트
+브라우저가 자동으로 열리며 `http://localhost:8501`에서 앱이 실행됩니다.
 
-### GET /api/shortio/clicks
+## 기능
 
-Short.io 클릭 로그를 변환하여 반환합니다.
+- ✅ Short.io 클릭 로그에서 5개 필드만 추출 (link, date, time, path, city)
+- ✅ 시간대 변환 지원 (UTC / Asia/Seoul)
+- ✅ 테이블 형태로 데이터 표시
+- ✅ CSV 다운로드 기능
+- ✅ Mock 데이터로 즉시 테스트 가능
+- ✅ 실제 Short.io API 연동 지원 (선택사항)
 
-**Query Parameters:**
-
-- `tz` (optional): 타임존 옵션 (`"UTC"` | `"Asia/Seoul"`), 기본값: `"UTC"`
-
-**예시:**
-
-```bash
-# UTC 타임존으로 요청
-curl http://localhost:3000/api/shortio/clicks
-
-# Asia/Seoul 타임존으로 요청
-curl http://localhost:3000/api/shortio/clicks?tz=Asia/Seoul
-```
-
-**응답 형식:**
-
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "link": "https://app.short.cm/login",
-      "date": "2020-05-20",
-      "time": "06:19:12",
-      "path": "/login",
-      "city": "Mumbai"
-    }
-  ],
-  "count": 3,
-  "timezone": "UTC"
-}
-```
-
-## 프로젝트 구조
+## 파일 구조
 
 ```
 short_auto/
-├── app/
-│   ├── api/
-│   │   └── shortio/
-│   │       └── clicks/
-│   │           └── route.ts      # API 라우트
-│   ├── layout.tsx                 # 루트 레이아웃
-│   ├── page.tsx                   # 메인 페이지
-│   └── globals.css                # 전역 스타일
-├── lib/
-│   └── shortioClicks.ts           # 타입 정의 및 변환 함수
-├── package.json
-├── tsconfig.json
-├── next.config.js
-└── vercel.json
+├── app.py              # Streamlit UI 메인 파일
+├── transforms.py       # 데이터 변환 함수
+├── shortio_client.py   # API 클라이언트 및 mock 데이터
+├── requirements.txt    # Python 의존성
+├── README.md           # 프로젝트 문서
+└── VERSION             # 버전 정보
 ```
 
-## 주요 기능
+## 사용 방법
 
-### 1. 데이터 변환 (`lib/shortioClicks.ts`)
+### Mock 데이터로 테스트
+1. 앱 실행: `streamlit run app.py`
+2. 사이드바에서 "실제 API 사용" 체크박스를 해제
+3. 시간대 선택 (UTC / Asia/Seoul)
+4. 테이블 확인 및 CSV 다운로드
 
-- Short.io 원본 클릭 데이터를 UI/API용 형태로 변환
-- 타임존 변환 지원 (UTC / Asia/Seoul)
-- 필수 필드만 추출 (link, date, time, path, city)
-- 민감정보(ip, ua 등) 제외
+### 실제 API 사용
+1. 사이드바에서 "실제 API 사용" 체크박스 선택
+2. Short.io API Key 입력
+3. Domain ID 입력 (선택사항, 환경변수로도 설정 가능)
+4. 데이터 가져오기
 
-### 2. API 라우트 (`app/api/shortio/clicks/route.ts`)
-
-- Next.js App Router 기반 API 엔드포인트
-- 현재는 샘플 데이터 사용 (실제 Short.io API 연동 준비됨)
-
-## 배포
-
-이 프로젝트는 Vercel을 통해 배포됩니다.
-
-### 깃허브 연결 방법
-
-1. 깃허브에서 새 저장소를 생성합니다.
-2. 다음 명령어로 원격 저장소를 연결합니다:
-
+### 환경변수 설정 (선택사항)
 ```bash
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-git branch -M main
-git add .
-git commit -m "Initial commit"
-git push -u origin main
+export SHORTIO_API_KEY="your_api_key_here"
+export SHORTIO_DOMAIN_ID="your_domain_id_here"
 ```
 
-### Vercel 배포 방법
+## 주요 함수
 
-1. [Vercel](https://vercel.com)에 로그인합니다.
-2. "New Project"를 클릭합니다.
-3. 깃허브 저장소를 선택합니다.
-4. 프로젝트 설정을 확인하고 "Deploy"를 클릭합니다.
+### `map_clicks(raw, tz="UTC")`
+- Short.io 원본 데이터를 UI용 형태로 변환
+- 타임존 변환 지원
+- 안전한 파싱 (예외 발생 시 빈 문자열 반환)
+
+### `fetch_last_clicks(api_key, domain_id, limit=30)`
+- Short.io API에서 최근 클릭 로그 가져오기
+- API 키가 없으면 자동으로 mock 데이터 반환
+
+## 요구사항
+
+- Python 3.9 이상 (zoneinfo 사용)
+- streamlit >= 1.28.0
+- pandas >= 2.0.0
+- requests >= 2.31.0 (API 사용 시)
+
+## 데이터 변환 규칙
+
+각 클릭 로그에서 다음 5개 필드만 추출합니다:
+
+1. **link**: `url` 필드
+2. **date**: `dt` 필드에서 `YYYY-MM-DD` 형식으로 추출
+3. **time**: `dt` 필드에서 `HH:mm:ss` 형식으로 추출
+4. **path**: `path` 필드가 있으면 사용, 없으면 `lcpath` 사용, 둘 다 없으면 빈 문자열
+5. **city**: `city` 필드가 있으면 사용, 없으면 빈 문자열 (country만 있어도 city는 빈 문자열 유지)
+
+**주의사항:**
+- 민감한 정보(ip, ua 등)는 절대 표시되지 않습니다
+- dt 파싱 실패 시 date/time은 빈 문자열로 처리됩니다 (앱이 중단되지 않음)
+- 시간대 변환은 UTC 또는 Asia/Seoul(KST)을 지원합니다
