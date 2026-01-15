@@ -4,8 +4,13 @@ Streamlit 기반 빠른 프로토타입
 """
 import streamlit as st
 import pandas as pd
+import os
+from dotenv import load_dotenv
 from transforms import map_clicks
 from shortio_client import get_clicks_data
+
+# .env 파일에서 환경변수 로드
+load_dotenv()
 
 # 페이지 설정
 st.set_page_config(
@@ -24,15 +29,19 @@ with st.sidebar:
     use_api = st.checkbox("실제 API 사용", value=False)
     
     if use_api:
+        # 환경변수에서 기본값 가져오기
+        default_api_key = os.getenv("SHORTIO_API_KEY", "")
         api_key = st.text_input(
             "Short.io API Key",
-            value="",
+            value=default_api_key,
             type="password",
             help="환경변수 SHORTIO_API_KEY에서도 읽을 수 있습니다."
         )
+        # 환경변수에서 기본값 가져오기
+        default_domain_id = os.getenv("SHORTIO_DOMAIN_ID", "")
         domain_id = st.text_input(
             "Domain ID",
-            value="",
+            value=default_domain_id,
             help="환경변수 SHORTIO_DOMAIN_ID에서도 읽을 수 있습니다."
         )
         limit = st.number_input(

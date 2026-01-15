@@ -4,7 +4,7 @@ Python + Streamlit 기반 빠른 프로토타입
 
 ## 버전 정보
 
-- **현재 버전**: v1.2.0
+- **현재 버전**: v1.3.2
 - **최종 업데이트**: 2026-01-15
 
 ## 빠른 시작
@@ -100,6 +100,7 @@ export SHORTIO_DOMAIN_ID="your_domain_id_here"
 이 프로젝트는 Streamlit Cloud를 통해 배포할 수 있습니다.
 
 **빠른 배포 방법:**
+
 1. [Streamlit Cloud](https://streamlit.io/cloud)에 GitHub 계정으로 로그인
 2. "New app" 클릭
 3. 저장소: `jamesjaesung-design/ShortIo_auto` 선택
@@ -107,6 +108,7 @@ export SHORTIO_DOMAIN_ID="your_domain_id_here"
 5. "Deploy" 클릭
 
 **환경변수 설정 (선택사항):**
+
 - Streamlit Cloud 대시보드 → Settings → Secrets
 - `SHORTIO_API_KEY`와 `SHORTIO_DOMAIN_ID` 설정
 
